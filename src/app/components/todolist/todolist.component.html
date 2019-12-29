@@ -2,12 +2,15 @@
 
 <input type="text" class="todo-input" placeholder="What needs to be done" [(ngModel)]="todoTitle" (keyup.enter)="addTodo()">
 
+<!--ngFor loops over each of the todo items in the list so that they're all displayed in the same format-->
+<!--added a model to the input for the todo list.  Therefore we save a property to the todo object of Title-->
+<!--added an event listener on the enter key, which calls the addTodo method-->
 <div class="todo-item" *ngFor="let todo of todos">
   <div class="todo-item-left">
     <input type="checkbox">
     <div class="todo-item-label">{{ todo.title }}</div>
   </div>
-  <div class="remove-item">
+  <div class="remove-item" (click)="deleteTodo(todo.id)">
     &times;
   </div>
 </div>
