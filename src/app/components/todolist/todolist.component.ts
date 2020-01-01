@@ -21,14 +21,7 @@ export class TodolistComponent implements OnInit {
     // starting state of the todo list
     this.todoTitle = '';
     this.idForTodo = 1;
-    this.todos = [
-      {
-        'id': 0,
-        'title': 'Default to do (please delete)',
-        'completed': false,
-        'editing': false,
-      }
-    ]
+    this.todos = []
   }
 
   // this todo method will add a new todo to the list
@@ -55,7 +48,16 @@ export class TodolistComponent implements OnInit {
   deleteTodo(id: number): void {
     // filters on the list of todos in the arry and looks for the matching id we pass in
     this.todos = this.todos.filter(todo => todo.id != id);
+  }
 
+  // filters on the list of todos and looks for ones that do not have the boolean completed as true
+  todoRemaining(): number {
+    return this.todos.filter(todo => !todo.completed).length;
+  }
+
+  checkAllTodos(): void {
+    // for event.target.checked to work here, i've had to cast event.target to a HTML input element
+    this.todos.forEach(todo => todo.completed = (<HTMLInputElement>event.target).checked);
   }
 
 }
