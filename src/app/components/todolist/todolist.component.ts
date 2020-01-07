@@ -19,8 +19,9 @@ export class TodolistComponent implements OnInit {
 
   ngOnInit() {
     // starting state of the todo list
+    // TODO return the array of todos from local storage
     this.todoTitle = '';
-    this.idForTodo = 1;
+    this.idForTodo = 0;
     this.todos = []
   }
 
@@ -42,8 +43,22 @@ export class TodolistComponent implements OnInit {
 
     // clear textbox after enter
     this.todoTitle = '';
-    this.idForTodo++;
+    // find max ID for todo and set the maxid variable to be the highest id
+    var maxid = 0;
+    this.todos.forEach(function(todo){
+      if(todo.id > maxid) maxid = todo.id;
+    })
+
+    console.log('maxid value ' + maxid);
+
+    // if the todo id is >= the maxid, idForTodo++
+    if(maxid >= this.idForTodo) {
+      this.idForTodo++;
+    }
+
+    console.log('idForTodo Value ' + this.idForTodo);
   }
+
 
   deleteTodo(id: number): void {
     // filters on the list of todos in the arry and looks for the matching id we pass in
