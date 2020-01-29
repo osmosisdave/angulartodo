@@ -44,10 +44,11 @@ export class TodolistComponent implements OnInit {
     // clear textbox after enter
     this.todoTitle = '';
     // find max ID for todo and set the maxid variable to be the highest id
-    var maxid = 0;
-    this.todos.forEach(function(todo){
-      if(todo.id > maxid) maxid = todo.id;
-    })
+    var maxid = Math.max(...this.todos.map(x => x.id));
+
+    // this.todos.forEach(function(todo){
+    //   if(todo.id > maxid) maxid = todo.id;
+    // })
 
     console.log('maxid value ' + maxid);
 
