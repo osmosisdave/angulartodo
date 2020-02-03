@@ -19,16 +19,10 @@ export class TodolistComponent implements OnInit {
 
   ngOnInit() {
     // starting state of the todo list
+    // TODO return the array of todos from local storage
     this.todoTitle = '';
-    this.idForTodo = 1;
-    this.todos = [
-      {
-        'id': 0,
-        'title': 'Default to do (please delete)',
-        'completed': false,
-        'editing': false,
-      }
-    ]
+    this.idForTodo = 0;
+    this.todos = []
   }
 
   // this todo method will add a new todo to the list
@@ -49,13 +43,37 @@ export class TodolistComponent implements OnInit {
 
     // clear textbox after enter
     this.todoTitle = '';
-    this.idForTodo++;
+    // find max ID for todo and set the maxid variable to be the highest id
+    var maxid = Math.max(...this.todos.map(x => x.id));
+
+    // this.todos.forEach(function(todo){
+    //   if(todo.id > maxid) maxid = todo.id;
+    // })
+
+    console.log('maxid value ' + maxid);
+
+    // if the todo id is >= the maxid, idForTodo++
+    if(maxid >= this.idForTodo) {
+      this.idForTodo++;
+    }
+
+    console.log('idForTodo Value ' + this.idForTodo);
   }
+
 
   deleteTodo(id: number): void {
     // filters on the list of todos in the arry and looks for the matching id we pass in
     this.todos = this.todos.filter(todo => todo.id != id);
+  }
 
+  // filters on the list of todos and looks for ones that do not have the boolean completed as true
+  todoRemaining(): number {
+    return this.todos.filter(todo => !todo.completed).length;
+  }
+
+  checkAllTodos(): void {
+    // for event.target.checked to work here, i've had to cast event.target to a HTML input element
+    this.todos.forEach(todo => todo.completed = (<HTMLInputElement>event.target).checked);
   }
 
 }

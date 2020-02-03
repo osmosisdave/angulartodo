@@ -5,10 +5,11 @@
 <!--ngFor loops over each of the todo items in the list so that they're all displayed in the same format-->
 <!--added a model to the input for the todo list.  Therefore we save a property to the todo object of Title-->
 <!--added an event listener on the enter key, which calls the addTodo method-->
+<!--added ngmodel todo.completed to the checkbox which sets the boolean flag completed to true against the checkbox-->
 <div class="todo-item" *ngFor="let todo of todos">
   <div class="todo-item-left">
-    <input type="checkbox">
-    <div class="todo-item-label">{{ todo.title }}</div>
+    <input type="checkbox" [(ngModel)]="todo.completed">
+    <div class="todo-item-label" [ngClass]="{ 'completed' : todo.completed }">{{ todo.title }}</div>
   </div>
   <div class="remove-item" (click)="deleteTodo(todo.id)">
     &times;
@@ -16,15 +17,15 @@
 </div>
 
 <div class="extra-container">
-  <div><label><input type="checkbox"> Check All</label></div>
-  <div>n items left</div>
+  <div><label><input type="checkbox" (change)="checkAllTodos()"> Check All</label></div>
+  <div>{{ todoRemaining() }} items left</div>
 </div>
 
-<div class="extra-container">
+<!--<div class="extra-container">
   <div>
     <button class="active">All</button>
     <button>Active</button>
     <button>Completed</button>
   </div>
 
-</div>
+</div>-->
