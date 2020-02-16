@@ -22,7 +22,13 @@ export class TodolistComponent implements OnInit {
     // TODO return the array of todos from local storage
     this.todoTitle = '';
     this.idForTodo = 0;
-    this.todos = []
+    this.todos = this.getTodos();
+  }
+
+  getTodos(): Todo[] {
+    var retrievedTodos = JSON.parse(localStorage.getItem("todos"));
+    console.log(retrievedTodos)
+    return retrievedTodos == null ? [] : retrievedTodos.todos;
   }
 
   // this todo method will add a new todo to the list
@@ -50,6 +56,8 @@ export class TodolistComponent implements OnInit {
     //   if(todo.id > maxid) maxid = todo.id;
     // })
 
+    this.setLocalStorageTodos(this.todos);
+
     console.log('maxid value ' + maxid);
 
     // if the todo id is >= the maxid, idForTodo++
@@ -59,7 +67,6 @@ export class TodolistComponent implements OnInit {
 
     console.log('idForTodo Value ' + this.idForTodo);
   }
-
 
   deleteTodo(id: number): void {
     // filters on the list of todos in the arry and looks for the matching id we pass in
@@ -74,6 +81,10 @@ export class TodolistComponent implements OnInit {
   checkAllTodos(): void {
     // for event.target.checked to work here, i've had to cast event.target to a HTML input element
     this.todos.forEach(todo => todo.completed = (<HTMLInputElement>event.target).checked);
+  }
+
+  setLocalStorageTodos(todos: Todo[]): void {
+    localStorage.setItem("todos", JSON.stringify({todos: todos}));
   }
 
 }
