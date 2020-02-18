@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Todo } from '../../interfaces/todo';
+import { LocalStorageManagerService } from '../../local-storage-manager.service';
 
 @Component({
   selector: 'todo-list',
@@ -14,19 +15,23 @@ export class TodolistComponent implements OnInit {
   todos: Todo[];
   todoTitle: string;
   idForTodo: number;
+  
+  // inject the local storage manager service into the todolist component(dependency injection, how do you manage multiple injections?)
+  constructor(private localStorage: LocalStorageManagerService) { }
 
-  constructor() { }
+  // create the localstoragemanager variable so that the injected service methods can be called.
+  localStorageManager = this.localStorage;
 
   ngOnInit() {
     // starting state of the todo list
-    // TODO return the array of todos from local storage
+    // TODO return the array of todos from local  storage
     this.todoTitle = '';
     this.idForTodo = 0;
     this.todos = this.getTodos();
   }
 
   getTodos(): Todo[] {
-    var retrievedTodos = JSON.parse(localStorage.getItem("todos"));
+    var retrievedTodos = this.localStorageManager.getLocalStorage("todos");
     console.log(retrievedTodos)
     return retrievedTodos == null ? [] : retrievedTodos.todos;
   }
@@ -52,18 +57,14 @@ export class TodolistComponent implements OnInit {
     // find max ID for todo and set the maxid variable to be the highest id
     var maxid = Math.max(...this.todos.map(x => x.id));
 
-    // this.todos.forEach(function(todo){
-    //   if(todo.id > maxid) maxid = todo.id;
-    // })
-
-    this.setLocalStorageTodos(this.todos);
-
     console.log('maxid value ' + maxid);
 
     // if the todo id is >= the maxid, idForTodo++
     if(maxid >= this.idForTodo) {
-      this.idForTodo++;
+    this.idForTodo++;
     }
+
+    this.localStorageManager.setLocalStorageTodos(this.todos);
 
     console.log('idForTodo Value ' + this.idForTodo);
   }
@@ -81,10 +82,6 @@ export class TodolistComponent implements OnInit {
   checkAllTodos(): void {
     // for event.target.checked to work here, i've had to cast event.target to a HTML input element
     this.todos.forEach(todo => todo.completed = (<HTMLInputElement>event.target).checked);
-  }
-
-  setLocalStorageTodos(todos: Todo[]): void {
-    localStorage.setItem("todos", JSON.stringify({todos: todos}));
   }
 
 }
