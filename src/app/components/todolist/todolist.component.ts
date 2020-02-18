@@ -70,8 +70,11 @@ export class TodolistComponent implements OnInit {
   }
 
   deleteTodo(id: number): void {
-    // filters on the list of todos in the arry and looks for the matching id we pass in
+    // filter the arry and remove the id sent in by clicking delete
     this.todos = this.todos.filter(todo => todo.id != id);
+
+    // overwrite the locally stored array with the new filtered array.  ID's keep incrementing but i'm not sure if this is an issue?
+    this.localStorageManager.setLocalStorageTodos(this.todos);
   }
 
   // filters on the list of todos and looks for ones that do not have the boolean completed as true
