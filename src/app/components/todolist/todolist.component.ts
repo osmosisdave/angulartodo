@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Todo } from '../../interfaces/todo';
-import { LocalStorageManagerService } from '../../local-storage-manager.service';
+import { StorageManagerService } from '../../storage-manager.service';
 
 @Component({
   selector: 'todo-list',
@@ -17,10 +17,10 @@ export class TodolistComponent implements OnInit {
   idForTodo: number;
   
   // inject the local storage manager service into the todolist component(dependency injection, how do you manage multiple injections?)
-  constructor(private localStorage: LocalStorageManagerService) { }
+  constructor(private localStorage: StorageManagerService) { }
 
   // create the localstoragemanager variable so that the injected service methods can be called.
-  localStorageManager = this.localStorage;
+  storageManager = this.localStorage;
 
   ngOnInit() {
     // starting state of the todo list
@@ -31,7 +31,7 @@ export class TodolistComponent implements OnInit {
   }
 
   getTodos(): Todo[] {
-    var retrievedTodos = this.localStorageManager.getLocalStorage("todos");
+    var retrievedTodos = this.storageManager.getLocalStorage("todos");
     console.log(retrievedTodos)
     return retrievedTodos == null ? [] : retrievedTodos.todos;
   }
@@ -64,7 +64,7 @@ export class TodolistComponent implements OnInit {
     this.idForTodo++;
     }
 
-    this.localStorageManager.setLocalStorageTodos(this.todos);
+    this.storageManager.setLocalStorage("todos", this.todos);
 
     console.log('idForTodo Value ' + this.idForTodo);
   }
@@ -74,7 +74,7 @@ export class TodolistComponent implements OnInit {
     this.todos = this.todos.filter(todo => todo.id != id);
 
     // overwrite the locally stored array with the new filtered array.  ID's keep incrementing but i'm not sure if this is an issue?
-    this.localStorageManager.setLocalStorageTodos(this.todos);
+    this.storageManager.setLocalStorage("todos", this.todos);
   }
 
   // filters on the list of todos and looks for ones that do not have the boolean completed as true
