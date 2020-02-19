@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Todo } from '../../interfaces/todo';
+import { StorageManagerService } from '../../storage-manager.service';
 
 @Component({
   selector: 'todo-list',
@@ -14,15 +15,25 @@ export class TodolistComponent implements OnInit {
   todos: Todo[];
   todoTitle: string;
   idForTodo: number;
+  
+  // inject the local storage manager service into the todolist component(dependency injection, how do you manage multiple injections?)
+  constructor(private localStorage: StorageManagerService) { }
 
-  constructor() { }
+  // create the localstoragemanager variable so that the injected service methods can be called.
+  storageManager = this.localStorage;
 
   ngOnInit() {
     // starting state of the todo list
-    // TODO return the array of todos from local storage
+    // TODO return the array of todos from local  storage
     this.todoTitle = '';
     this.idForTodo = 0;
-    this.todos = []
+    this.todos = this.getTodos();
+  }
+
+  getTodos(): Todo[] {
+    var retrievedTodos = this.storageManager.getLocalStorage("todos");
+    console.log(retrievedTodos)
+    return retrievedTodos == null ? [] : retrievedTodos.todos;
   }
 
   // this todo method will add a new todo to the list
@@ -46,24 +57,24 @@ export class TodolistComponent implements OnInit {
     // find max ID for todo and set the maxid variable to be the highest id
     var maxid = Math.max(...this.todos.map(x => x.id));
 
-    // this.todos.forEach(function(todo){
-    //   if(todo.id > maxid) maxid = todo.id;
-    // })
-
     console.log('maxid value ' + maxid);
 
     // if the todo id is >= the maxid, idForTodo++
     if(maxid >= this.idForTodo) {
-      this.idForTodo++;
+    this.idForTodo++;
     }
+
+    this.storageManager.setLocalStorage("todos", this.todos);
 
     console.log('idForTodo Value ' + this.idForTodo);
   }
 
-
   deleteTodo(id: number): void {
-    // filters on the list of todos in the arry and looks for the matching id we pass in
+    // filter the arry and remove the id sent in by clicking delete
     this.todos = this.todos.filter(todo => todo.id != id);
+
+    // overwrite the locally stored array with the new filtered array.  ID's keep incrementing but i'm not sure if this is an issue?
+    this.storageManager.setLocalStorage("todos", this.todos);
   }
 
   // filters on the list of todos and looks for ones that do not have the boolean completed as true

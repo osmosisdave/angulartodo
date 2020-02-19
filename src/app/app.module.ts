@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TodolistComponent } from './components/todolist/todolist.component';
+import { StorageManagerService } from './storage-manager.service';
 
 
 
@@ -19,7 +20,9 @@ import { TodolistComponent } from './components/todolist/todolist.component';
     AppRoutingModule,
     FormsModule
   ],
-  providers: [],
+  providers: [
+    StorageManagerService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
